@@ -88,22 +88,9 @@ ablyScript.onload=function(){
 };
 document.head.appendChild(ablyScript);
 
-// Detect when Giga actually connects (button text changes to Disconnect)
-new MutationObserver(function(){
-  var btn=Array.from(document.querySelectorAll('button')).find(function(b){return b.textContent.trim()==='Disconnect';});
-  if(btn&&w$('wCoachBtn').style.display!=='none'){
-    w$('wCoachBtn').style.display='none';
-    w$('wCsTxt').innerHTML='<span class="ld"></span><strong>Connected.</strong> Speak now.';
-    setTimeout(hideGigaUI,800);
-  }
-}).observe(document.body,{childList:true,subtree:true,characterData:true});
-function hideGigaUI(){var panel=document.querySelector('.absolute.lg\:left-0.top-0.flex.justify-center');if(panel)panel.style.cssText='display:none!important';if(!panel){document.querySelectorAll('input').forEach(function(inp){var el=inp;for(var i=0;i<10;i++){el=el.parentElement;if(!el||el===document.body)break;if(el.querySelectorAll('input').length>=3){el.style.cssText='display:none!important';break;}}});}}
-setTimeout(hideGigaUI,200);setTimeout(hideGigaUI,600);setTimeout(hideGigaUI,1500);setTimeout(hideGigaUI,3000);
-new MutationObserver(function(){hideGigaUI();}).observe(document.body,{childList:true,subtree:false});
-
+// Auto-fill Giga form fields
 var INIT=['Alex Johnson','6','56','42','-25','HIIT Intervals x6 (45 min) + Core Circuit (20 min)','Half Marathon','yellow','58','58','slightly elevated','6h 12m','48','7h 00m','71','performance training','16.8','Challenging'];
 var inputs=Array.from(document.querySelectorAll('input'));
 var setter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value').set;
 inputs.forEach(function(inp,i){if(INIT[i]!==undefined){setter.call(inp,INIT[i]);inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}));}});
-hideGigaUI();
 })();
