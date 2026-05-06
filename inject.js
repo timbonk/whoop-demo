@@ -57,13 +57,13 @@ ablyScript.onload=function(){
     if(a==='rec')wUI.rec();
     else if(a==='un_rec'){var s=w$('wRscore');if(s){s.style.textShadow='';s.style.transform='';}var r=w$('wRfill');if(r){r.style.filter='';r.style.strokeWidth='10';}w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
     else if(a==='all')wUI.all();
-    else if(a==='un_all'){['wMcHRV','wMcRHR','wMcStr','wMcSlp'].forEach(function(id){var el=w$(id);if(el)el.classList.remove('hl');});w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
+    else if(a==='un_all'){['wMcHRV','wMcRHR','wMcStr','wMcSlp'].forEach(function(id){var el=w$(id);if(!el)return;el.classList.remove('hl','flash');el.style.animation='none';el.style.boxShadow='';setTimeout(function(){el.style.animation='';},50);});w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
     else if(a==='hrv')wUI.hrv();
-    else if(a==='un_hrv'){['wMcHRV','wMcRHR'].forEach(function(id){var el=w$(id);if(el)el.classList.remove('hl');});w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
+    else if(a==='un_hrv'){['wMcHRV','wMcRHR'].forEach(function(id){var el=w$(id);if(!el)return;el.classList.remove('hl','flash');el.style.animation='none';el.style.boxShadow='';setTimeout(function(){el.style.animation='';},50);});w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
     else if(a==='slp')wUI.slp();
-    else if(a==='un_slp'){var el=w$('wMcSlp');if(el)el.classList.remove('hl');w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
+    else if(a==='un_slp'){var el=w$('wMcSlp');if(el){el.classList.remove('hl','flash');el.style.animation='none';el.style.boxShadow='';setTimeout(function(){el.style.animation='';},50);}w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
     else if(a==='str')wUI.str();
-    else if(a==='un_str'){var el=w$('wMcStr');if(el)el.classList.remove('hl');w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
+    else if(a==='un_str'){var el=w$('wMcStr');if(el){el.classList.remove('hl','flash');el.style.animation='none';el.style.boxShadow='';setTimeout(function(){el.style.animation='';},50);}w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
     else if(a==='swap')wUI.swap();
     else if(a==='rem')wUI.rem();
     else if(a==='reset')wUI.reset();
