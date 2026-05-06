@@ -23,28 +23,42 @@ window.wUI={
   reset:function(){var woc=w$('wWoc');woc.classList.remove('upd');w$('wWotitle').textContent='HIIT Training';var wb=w$('wWobadge');wb.className='wob orig';wb.textContent='Original';w$('wWn1').classList.remove('sk');w$('wWd1').style.background='#ff4d6a';w$('wWn2').classList.remove('sk');w$('wWd2').style.background='#f5c842';w$('wWr3').style.display='none';var r2=w$('wRc2'),r3=w$('wRc3');if(r2)r2.classList.remove('on');if(r3){r3.style.display='none';r3.classList.remove('on');}['wMcHRV','wMcRHR','wMcStr','wMcSlp'].forEach(function(id){var el=w$(id);if(el)el.classList.remove('hl');});var n=w$('wNote');if(n){n.style.display='none';n.style.opacity='0';}w$('wCoachBtn').style.display='none';w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';wToast('\u21BA','Reset');}
 };
 
-window.wShowConnect=function(){w$('wCoachBtn').style.display='block';w$('wCsTxt').innerHTML='<strong>Tap below</strong> to start \u2192';};
+window.wShowConnect=function(){
+  // Instead of a fake button, find the real Giga connect button and style it to look like ours
+  var gigaBtn=Array.from(document.querySelectorAll('button')).find(function(x){return x.textContent.trim()==='Connect to agent';});
+  if(gigaBtn){
+    // Show the panel containing the real button temporarily, but style the button itself
+    var container=gigaBtn.parentElement;
+    while(container&&container!==document.body){
+      container.style.cssText='';
+      container=container.parentElement;
+    }
+    // Style the real button to look like Talk to Coach
+    gigaBtn.textContent='\uD83C\uDF99 Talk to Coach';
+    gigaBtn.style.cssText='width:calc(100% - 20px);margin:0 10px;padding:16px;border-radius:14px;border:none;background:linear-gradient(135deg,#00d4a0,#0ea5e9);font-family:Barlow,sans-serif;font-size:15px;font-weight:800;color:#fff;cursor:pointer;display:block;animation:wCP 1.8s ease-in-out infinite;position:relative;z-index:999999';
+    // Hide all other Giga UI elements except this button
+    document.querySelectorAll('input').forEach(function(inp){
+      var el=inp;
+      for(var i=0;i<10;i++){
+        el=el.parentElement;
+        if(!el||el===document.body)break;
+        if(el.querySelectorAll('input').length>=3){el.style.cssText='display:none!important';break;}
+      }
+    });
+    // Move button into our WHOOP panel
+    w$('wCoachBtn').style.display='block';
+    w$('wCoachBtn').innerHTML='';
+    w$('wCoachBtn').appendChild(gigaBtn);
+  }
+  w$('wCsTxt').innerHTML='<strong>Tap below</strong> to start \u2192';
+};
 window.wHideConnect=function(){w$('wCoachBtn').style.display='none';};
 window.wDoConnect=function(){
-  // Find the Connect button — may be inside a hidden panel
-  var b=Array.from(document.querySelectorAll('button')).find(function(x){return x.textContent.trim()==='Connect to agent';});
-  if(b){
-    // Temporarily show all hidden ancestors so the click registers
-    var el=b;var hidden=[];
-    while(el&&el!==document.body){
-      if(window.getComputedStyle(el).display==='none'){
-        el.style.cssText='display:block!important';
-        hidden.push(el);
-      }
-      el=el.parentElement;
-    }
-    b.click();
-    // Re-hide after a tick
-    setTimeout(function(){hidden.forEach(function(n){n.style.cssText='display:none!important';});},100);
-    w$('wCoachBtn').style.display='none';
-    w$('wCsTxt').innerHTML='<span class="ld"></span><strong>Connected.</strong> Speak now.';
-    setTimeout(hideGigaUI,800);setTimeout(hideGigaUI,2500);
-  }
+  // This is now called by the real Giga button's onclick won't exist — 
+  // the real Giga button handles its own click. Just update UI.
+  w$('wCoachBtn').style.display='none';
+  w$('wCsTxt').innerHTML='<span class="ld"></span><strong>Connected.</strong> Speak now.';
+  setTimeout(hideGigaUI,1200);
 };
 window.wDoDisconnect=function(){var b=Array.from(document.querySelectorAll('button')).find(function(x){return x.textContent.trim()==='Disconnect';});if(b)b.click();w$('wCoachBtn').style.display='none';w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';};
 
@@ -74,7 +88,16 @@ ablyScript.onload=function(){
 };
 document.head.appendChild(ablyScript);
 
-function hideGigaUI(){var panel=document.querySelector('.absolute.lg\\:left-0.top-0.flex.justify-center');if(panel)panel.style.cssText='display:none!important';if(!panel){document.querySelectorAll('input').forEach(function(inp){var el=inp;for(var i=0;i<10;i++){el=el.parentElement;if(!el||el===document.body)break;if(el.querySelectorAll('input').length>=3){el.style.cssText='display:none!important';break;}}});}}
+// Detect when Giga actually connects (button text changes to Disconnect)
+new MutationObserver(function(){
+  var btn=Array.from(document.querySelectorAll('button')).find(function(b){return b.textContent.trim()==='Disconnect';});
+  if(btn&&w$('wCoachBtn').style.display!=='none'){
+    w$('wCoachBtn').style.display='none';
+    w$('wCsTxt').innerHTML='<span class="ld"></span><strong>Connected.</strong> Speak now.';
+    setTimeout(hideGigaUI,800);
+  }
+}).observe(document.body,{childList:true,subtree:true,characterData:true});
+function hideGigaUI(){var panel=document.querySelector('.absolute.lg\:left-0.top-0.flex.justify-center');if(panel)panel.style.cssText='display:none!important';if(!panel){document.querySelectorAll('input').forEach(function(inp){var el=inp;for(var i=0;i<10;i++){el=el.parentElement;if(!el||el===document.body)break;if(el.querySelectorAll('input').length>=3){el.style.cssText='display:none!important';break;}}});}}
 setTimeout(hideGigaUI,200);setTimeout(hideGigaUI,600);setTimeout(hideGigaUI,1500);setTimeout(hideGigaUI,3000);
 new MutationObserver(function(){hideGigaUI();}).observe(document.body,{childList:true,subtree:false});
 
