@@ -71,8 +71,5 @@ ablyScript.onload=function(){
 };
 document.head.appendChild(ablyScript);
 
-var INIT=['Alex Johnson','6','56','42','-25','HIIT Intervals x6 (45 min) + Core Circuit (20 min)','Half Marathon','yellow','58','58','slightly elevated','6h 12m','48','7h 00m','71','performance training','16.8','Challenging'];
-var inputs=Array.from(document.querySelectorAll('input'));
-var setter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value').set;
-inputs.forEach(function(inp,i){if(INIT[i]!==undefined){setter.call(inp,INIT[i]);inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}));}});
+// Form fields filled via URL params - no JS injection needed
 })();
