@@ -25,7 +25,27 @@ window.wUI={
 
 window.wShowConnect=function(){w$('wCoachBtn').style.display='block';w$('wCsTxt').innerHTML='<strong>Tap below</strong> to start \u2192';};
 window.wHideConnect=function(){w$('wCoachBtn').style.display='none';};
-window.wDoConnect=function(){var b=Array.from(document.querySelectorAll('button')).find(function(x){return x.textContent.trim()==='Connect to agent';});if(b){b.click();w$('wCoachBtn').style.display='none';w$('wCsTxt').innerHTML='<span class="ld"></span><strong>Connected.</strong> Speak now.';setTimeout(hideGigaUI,800);setTimeout(hideGigaUI,2500);}};
+window.wDoConnect=function(){
+  // Find the Connect button — may be inside a hidden panel
+  var b=Array.from(document.querySelectorAll('button')).find(function(x){return x.textContent.trim()==='Connect to agent';});
+  if(b){
+    // Temporarily show all hidden ancestors so the click registers
+    var el=b;var hidden=[];
+    while(el&&el!==document.body){
+      if(window.getComputedStyle(el).display==='none'){
+        el.style.cssText='display:block!important';
+        hidden.push(el);
+      }
+      el=el.parentElement;
+    }
+    b.click();
+    // Re-hide after a tick
+    setTimeout(function(){hidden.forEach(function(n){n.style.cssText='display:none!important';});},100);
+    w$('wCoachBtn').style.display='none';
+    w$('wCsTxt').innerHTML='<span class="ld"></span><strong>Connected.</strong> Speak now.';
+    setTimeout(hideGigaUI,800);setTimeout(hideGigaUI,2500);
+  }
+};
 window.wDoDisconnect=function(){var b=Array.from(document.querySelectorAll('button')).find(function(x){return x.textContent.trim()==='Disconnect';});if(b)b.click();w$('wCoachBtn').style.display='none';w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';};
 
 // Ably realtime — cross-device messaging
