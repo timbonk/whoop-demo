@@ -25,12 +25,34 @@ window.wUI={
 
 window.wShowConnect=function(){w$('wCoachBtn').style.display='block';w$('wCsTxt').innerHTML='<strong>Tap below</strong> to start \u2192';};
 window.wHideConnect=function(){w$('wCoachBtn').style.display='none';};
-window.wDoConnect=function(){var b=Array.from(document.querySelectorAll('button')).find(function(x){return x.textContent.trim()==='Connect to agent';});if(b){b.click();w$('wCoachBtn').style.display='none';w$('wCsTxt').innerHTML='<span class="ld"></span><strong>Connected.</strong> Speak now.';setTimeout(hideGigaUI,800);setTimeout(hideGigaUI,2500);if(wpBC)wpBC.postMessage({type:'status',value:'connected'});}};
-window.wDoDisconnect=function(){var b=Array.from(document.querySelectorAll('button')).find(function(x){return x.textContent.trim()==='Disconnect';});if(b)b.click();w$('wCoachBtn').style.display='none';w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';if(wpBC)wpBC.postMessage({type:'status',value:'disconnected'});};
+window.wDoConnect=function(){var b=Array.from(document.querySelectorAll('button')).find(function(x){return x.textContent.trim()==='Connect to agent';});if(b){b.click();w$('wCoachBtn').style.display='none';w$('wCsTxt').innerHTML='<span class="ld"></span><strong>Connected.</strong> Speak now.';setTimeout(hideGigaUI,800);setTimeout(hideGigaUI,2500);}};
+window.wDoDisconnect=function(){var b=Array.from(document.querySelectorAll('button')).find(function(x){return x.textContent.trim()==='Disconnect';});if(b)b.click();w$('wCoachBtn').style.display='none';w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';};
 
-var wpBC=null;
-function wpConnect(ch){if(wpBC)wpBC.close();wpBC=new BroadcastChannel('whoop-ctrl-'+(ch||'whoop-demo-1'));wpBC.onmessage=function(e){var d=e.data;if(d.type==='ping')wpBC.postMessage({type:'ack'});if(d.type==='action'){var a=d.action;if(a==='all')wUI.all();else if(a==='hrv')wUI.hrv();else if(a==='slp')wUI.slp();else if(a==='str')wUI.str();else if(a==='swap')wUI.swap();else if(a==='rem')wUI.rem();else if(a==='reset')wUI.reset();else if(a==='show_connect')wShowConnect();else if(a==='hide_connect')wHideConnect();else if(a==='disconnect')wDoDisconnect();}};wpBC.postMessage({type:'ack'});window.wpBC=wpBC;}
-wpConnect('whoop-demo-1');
+// Ably realtime — cross-device messaging
+var ABLY_KEY='qzyzdQ.RXc0AA:iU2O2KRMseszugyyUYuDtz4vNq-a0TG6M7vAdXfxw_M';
+var ablyScript=document.createElement('script');
+ablyScript.src='https://cdn.ably.com/lib/ably.min-2.js';
+ablyScript.onload=function(){
+  var ably=new Ably.Realtime({key:ABLY_KEY,clientId:'whoop-screen'});
+  var ch=ably.channels.get('whoop-demo');
+  ch.subscribe(function(msg){
+    var a=msg.data;
+    if(a==='all')wUI.all();
+    else if(a==='hrv')wUI.hrv();
+    else if(a==='slp')wUI.slp();
+    else if(a==='str')wUI.str();
+    else if(a==='swap')wUI.swap();
+    else if(a==='rem')wUI.rem();
+    else if(a==='reset')wUI.reset();
+    else if(a==='show_connect')wShowConnect();
+    else if(a==='hide_connect')wHideConnect();
+    else if(a==='disconnect')wDoDisconnect();
+  });
+  ably.connection.on('connected',function(){
+    w$('wCsTxt').innerHTML='<span class="ld"></span><strong>WHOOP Coach</strong> ready';
+  });
+};
+document.head.appendChild(ablyScript);
 
 function hideGigaUI(){var panel=document.querySelector('.absolute.lg\\:left-0.top-0.flex.justify-center');if(panel)panel.style.cssText='display:none!important';if(!panel){document.querySelectorAll('input').forEach(function(inp){var el=inp;for(var i=0;i<10;i++){el=el.parentElement;if(!el||el===document.body)break;if(el.querySelectorAll('input').length>=3){el.style.cssText='display:none!important';break;}}});}}
 setTimeout(hideGigaUI,200);setTimeout(hideGigaUI,600);setTimeout(hideGigaUI,1500);setTimeout(hideGigaUI,3000);
