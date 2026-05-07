@@ -11,7 +11,7 @@ document.body.appendChild(p);
 
 var w$=function(id){return document.getElementById(id);};
 function wToast(i,t){w$('wTico').textContent=i;w$('wTtxt').textContent=t;var el=w$('whoop-toast');el.classList.add('show');setTimeout(function(){el.classList.remove('show');},2600);}
-function wHl(id){var el=w$(id);if(!el)return;el.classList.add('hl','flash');setTimeout(function(){el.classList.remove('flash');},900);}
+function wHl(id){var el=w$(id);if(!el)return;el.classList.add('hl');}
 
 window.wUI={
   rec:function(){
@@ -35,7 +35,7 @@ window.wUI={
     w$('wWr3').style.display='flex';
     setTimeout(function(){woc.classList.add('flash-woc');setTimeout(function(){woc.classList.remove('flash-woc');},950);},50);
     var n=w$('wNote');
-    if(n){n.style.display='block';n.classList.add('visible');setTimeout(function(){n.classList.remove('visible');},450);}
+    if(n){n.style.display='block';n.style.opacity='1';}
     wToast('\u2705','Workout swapped \u2192 Zone 2 Cardio');
     w$('wCsTxt').innerHTML='<span class="ld"></span><strong>Workout updated.</strong> Zone 2 Cardio \u2014 30 min.';},
   rem:function(){var r2=w$('wRc2'),r3=w$('wRc3');if(r2&&r2.classList.contains('on'))return;
@@ -57,13 +57,13 @@ ablyScript.onload=function(){
     if(a==='rec')wUI.rec();
     else if(a==='un_rec'){var s=w$('wRscore');if(s){s.style.textShadow='';s.style.transform='';}var r=w$('wRfill');if(r){r.style.filter='';r.style.strokeWidth='10';}w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
     else if(a==='all')wUI.all();
-    else if(a==='un_all'){['wMcHRV','wMcRHR','wMcStr','wMcSlp'].forEach(function(id){var el=w$(id);if(!el)return;el.classList.remove('hl','flash');el.style.animation='none';el.style.boxShadow='';setTimeout(function(){el.style.animation='';},50);});w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
+    else if(a==='un_all'){['wMcHRV','wMcRHR','wMcStr','wMcSlp'].forEach(function(id){var el=w$(id);if(el)el.classList.remove('hl');});w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
     else if(a==='hrv')wUI.hrv();
-    else if(a==='un_hrv'){['wMcHRV','wMcRHR'].forEach(function(id){var el=w$(id);if(!el)return;el.classList.remove('hl','flash');el.style.animation='none';el.style.boxShadow='';setTimeout(function(){el.style.animation='';},50);});w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
+    else if(a==='un_hrv'){['wMcHRV','wMcRHR'].forEach(function(id){var el=w$(id);if(el)el.classList.remove('hl');});w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
     else if(a==='slp')wUI.slp();
-    else if(a==='un_slp'){var el=w$('wMcSlp');if(el){el.classList.remove('hl','flash');el.style.animation='none';el.style.boxShadow='';setTimeout(function(){el.style.animation='';},50);}w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
+    else if(a==='un_slp'){var el=w$('wMcSlp');if(el)el.classList.remove('hl');w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
     else if(a==='str')wUI.str();
-    else if(a==='un_str'){var el=w$('wMcStr');if(el){el.classList.remove('hl','flash');el.style.animation='none';el.style.boxShadow='';setTimeout(function(){el.style.animation='';},50);}w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
+    else if(a==='un_str'){var el=w$('wMcStr');if(el)el.classList.remove('hl');w$('wCsTxt').innerHTML='<strong>WHOOP Coach</strong> is active \u2192';}
     else if(a==='swap')wUI.swap();
     else if(a==='rem')wUI.rem();
     else if(a==='reset')wUI.reset();
