@@ -13,6 +13,16 @@ var w$=function(id){return document.getElementById(id);};
 function wToast(i,t){w$('wTico').textContent=i;w$('wTtxt').textContent=t;var el=w$('whoop-toast');el.classList.add('show');setTimeout(function(){el.classList.remove('show');},2600);}
 function wHl(id){var el=w$(id);if(!el)return;el.classList.add('hl');}
 
+function wDoDisconnect(){
+  var btns=[].slice.call(document.querySelectorAll('button'));
+  var btn=btns.find(function(b){return b.textContent.trim()==='Disconnect';});
+  if(btn){btn.click();}
+}
+function wShowConnect(){
+  var btns=[].slice.call(document.querySelectorAll('button'));
+  var btn=btns.find(function(b){return b.textContent.trim()==='Connect to agent';});
+  if(btn){btn.click();}
+}
 window.wUI={
   rec:function(){
     var ring=w$('wRfill');
